@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdmitLab - Curating Extracurricular Pathways</title>
+    <style>
+        :root {
+            --bg-color: #FAF6F0;
+            --card-bg: #FFFFFF;
+            --brand-coral: #F75D59;
+            --brand-orange: #FF7B47;
+            --brand-yellow: #FFB733;
+            --text-dark: #2D2D2D;
+            --text-muted: #888888;
+            --border-color: #F3E5D8;
+            --shadow: 0 10px 25px rgba(247, 93, 89, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        header {
+            background: #FFFFFF;
+            padding: 2.5rem 1.5rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+
+        .logo-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .logo-text {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+        }
+
+        .logo-text .admit {
+            color: var(--brand-coral);
+        }
+
+        .logo-text .lab {
+            color: var(--brand-yellow);
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 3.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2.5rem auto 0;
+            padding: 0 1.2rem;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--brand-coral);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group select {
+            padding: 0.9rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background-color: #FFF;
+            outline: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .form-group select:focus {
+            border-color: var(--brand-orange);
+            box-shadow: 0 0 0 3px rgba(255, 123, 71, 0.15);
+        }
+
+        .submit-btn {
+            margin-top: 2rem;
+            width: 100%;
+            background: linear-gradient(135deg, var(--brand-coral) 0%, var(--brand-orange) 50%, var(--brand-yellow) 100%);
+            color: white;
+            border: none;
+            padding: 1.1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 123, 71, 0.35);
+        }
+
+        .results-container {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .badge-count {
+            background: linear-gradient(135deg, var(--brand-coral), var(--brand-orange));
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .ec-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .ec-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(247, 93, 89, 0.12);
+        }
+
+        .ec-card .tag {
+            align-self: flex-start;
+            background-color: #FFF3ED;
+            color: var(--brand-orange);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ec-card h3 {
+            color: var(--text-dark);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .ec-card p {
+            color: #555555;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .apply-btn {
+            display: inline-block;
+            text-align: center;
+            background-color: var(--text-dark);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .apply-btn:hover {
+            background-color: var(--brand-coral);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-wrapper">
+            <div class="logo-container">
+                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 80 L40 20 L55 20 L30 80 Z" fill="url(#grad-left)"/>
+                    <path d="M45 80 L70 20 L85 20 L60 80 Z" fill="url(#grad-right)"/>
+                    <path d="M20 62 C 35 55, 55 40, 75 25 L88 38 L68 75 C 50 75, 30 75, 20 62 Z" fill="url(#grad-arrow)"/>
+                    <path d="M60 20 L88 20 L88 48 Z" fill="#FF7B47"/>
+                    <defs>
+                        <linearGradient id="grad-left" x1="0" y1="100" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#F75D59"/>
+                            <stop offset="100%" stop-color="#FF7B47"/>
+                        </linearGradient>
+                        <linearGradient id="grad-arrow" x1="0" y1="100" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#F75D59"/>
+                            <stop offset="60%" stop-color="#FF7B47"/>
+                            <stop offset="100%" stop-color="#FFB733"/>
+                        </linearGradient>
+                        <linearGradient id="grad-right" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#FF7B47"/>
+                            <stop offset="100%" stop-color="#FFB733"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="logo-text">
+                    <span class="admit">Admit</span><span class="lab">Lab</span>
+                </div>
+            </div>
+            <div class="tagline">Curating Extracurricular Pathways</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-card">
+            <form id="ecForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="age">Grade / Level</label>
+                        <select id="age" required>
+                            <option value="">Select Level</option>
+                            <option value="Middle School">Middle School (Grades 6-8)</option>
+                            <option value="High School Fresh/Soph">High School (Grades 9-10)</option>
+                            <option value="High School Jun/Sen">High School (Grades 11-12)</option>
+                            <option value="Undergraduate">College / Undergraduate</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest">Primary Field</label>
+                        <select id="interest" required>
+                            <option value="">Select Field</option>
+                            <option value="Physics">Physics & Astrophysics</option>
+                            <option value="Mathematics">Mathematics & Statistics</option>
+                            <option value="Engineering">Engineering & Robotics</option>
+                            <option value="Biology">Biology & Life Sciences</option>
+                            <option value="Business">Business & Entrepreneurship</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <select id="country" required>
+                            <option value="">Select Country</option>
+                            <option value="USA">United States</option>
+                            <option value="India">India</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Other">Other Country</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">Curate Pathways</button>
+            </form>
+        </div>
+
+        <div id="results" class="results-container">
+            <div class="section-header">
+                <h2 class="section-title">National Opportunities</h2>
+                <span id="nationalBadge" class="badge-count">10 Found</span>
+            </div>
+            <div id="nationalCards" class="cards-grid"></div>
+
+            <div class="section-header">
+                <h2 class="section-title">Global Pathways</h2>
+                <span id="globalBadge" class="badge-count">10 Found</span>
+            </div>
+            <div id="globalCards" class="cards-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const nationalDatabase = {
+            USA: {
+                Physics: [
+                    { title: "F=ma Physics Contest (USAPhO)", desc: "The official preliminary exam for selecting the US Physics Olympiad team.", url: "https://www.aapt.org/physicsteam/2024/registration.cfm" },
+                    { title: "Princeton University Physics Competition", desc: "Rigorous physics competition for high school students organized by Princeton students.", url: "https://pupc.princeton.edu/" },
+                    { title: "National Physics Bowl", desc: "Multiple-choice test taken by physics students nationwide.", url: "https://www.aapt.org/Programs/physicsbowl/" },
+                    { title: "Regeneron Science Talent Search", desc: "Preeminent research competition for high school seniors producing original physics research.", url: "https://www.societyforscience.org/regeneron-sts/" },
+                    { title: "Junior Science and Humanities Symposium", desc: "Present original STEM and physics research to university and defense researchers.", url: "https://jshs.org/" },
+                    { title: "MIT THINK Scholars Program", desc: "Educational initiative supporting high school students in physics and STEM development.", url: "https://think.mit.edu/" },
+                    { title: "Yale Physics Olympics", desc: "Annual physics challenge organized by the Yale University Physics Department.", url: "https://physics.yale.edu/outreach/yale-physics-olympics" },
+                    { title: "USABO - Physics Track Research Grants", desc: "National fellowship recognition for theoretical physics applicants.", url: "https://www.societyforscience.org/" },
+                    { title: "Stanford ProCo Competition", desc: "Algorithmic and computational physics track hosted by Stanford University.", url: "https://proco.stanford.edu/" },
+                    { title: "National Science Bowl (Physics)", desc: "Department of Energy national competition testing fast-paced physics problem solving.", url: "https://science.osti.gov/wdts/nsb" }
+                ],
+                Mathematics: [
+                    { title: "American Mathematics Competitions (AMC 10/12)", desc: "The official pipeline leading to the USA Mathematical Olympiad (USAMO).", url: "https://www.maa.org/math-competitions" },
+                    { title: "Harvard-MIT Mathematics Tournament", desc: "One of the largest high school math competitions run by Harvard and MIT students.", url: "https://www.hmmt.org/" },
+                    { title: "American Regions Mathematics League", desc: "National team-based math contest bringing together regional powerhouses.", url: "https://www.arml.com/" },
+                    { title: "USA Mathematical Talent Search", desc: "Free proof-based competition allowing students a full month to solve complex math problems.", url: "https://www.usamts.org/" },
+                    { title: "Math Prize for Girls", desc: "The largest math contest for high-school girls in the US and Canada held at MIT.", url: "https://mathprize.athena.org/" },
+                    { title: "Putnam Mathematical Competition", desc: "The preeminent undergraduate mathematics competition in North America.", url: "https://www.maa.org/math-competitions/putnam-competition" },
+                    { title: "Stanford Math Tournament", desc: "Academic contest organized by Stanford students for high schoolers.", url: "https://sumo.stanford.edu/smt/" },
+                    { title: "Berkeley Math Tournament", desc: "Student-run math competition hosted on the UC Berkeley campus.", url: "https://bmt.berkeley.edu/" },
+                    { title: "Carnegie Mellon Informatics & Math Contest", desc: "National proof and algorithm competition hosted at CMU.", url: "https://cmimc.info/" },
+                    { title: "Johns Hopkins Math Tournament", desc: "Annual math contest testing advanced algebra, geometry, and calculus concepts.", url: "https://jhmt.github.io/" }
+                ],
+                Engineering: [
+                    { title: "FIRST Robotics Competition", desc: "Teams design, code, and build industrial-size robots to compete in dynamic games.", url: "https://www.firstinspires.org/robotics/frc" },
+                    { title: "American Rocketry Challenge", desc: "World's largest student rocket contest where teams design and launch model rockets.", url: "https://rocketcontest.org/" },
+                    { title: "NASA Human Exploration Rover Challenge", desc: "Design, build, and race human-powered rovers built for extraterrestrial terrain.", url: "https://www.nasa.gov/learning-resources/human-exploration-rover-challenge/" },
+                    { title: "MATE ROV Competition", desc: "Build underwater remotely operated vehicles (ROVs) to solve ocean engineering problems.", url: "https://materovcompetition.org/" },
+                    { title: "Solar Car Challenge", desc: "Motivates students to design, engineer, and race roadworthy solar-powered vehicles.", url: "https://www.solarcharchallenge.org/" },
+                    { title: "SourceAmerica Design Challenge", desc: "Engineering contest creating assistive technology for employees with disabilities.", url: "https://www.sourceamerica.org/design-challenge" },
+                    { title: "RoboSub Competition", desc: "Design autonomous underwater vehicles (AUVs) to navigate obstacle courses.", url: "https://robonation.org/app/programs/robosub/" },
+                    { title: "National Ocean Sciences Robotics Track", desc: "Engineering and marine technological challenge sponsored by NOAA.", url: "https://nosb.org/" },
+                    { title: "TSA Engineering Design Contest", desc: "Technology Student Association national competition solving municipal engineering tasks.", url: "https://tsaweb.org/" },
+                    { title: "eCYBERMISSION Competition", desc: "US Army Educational Outreach program where middle and high school teams solve community issues.", url: "https://www.ecybermission.com/" }
+                ],
+                Biology: [
+                    { title: "USA BioOlympiad (USABO)", desc: "Premier biology competition selecting delegates for the International Biology Olympiad.", url: "https://www.usabo-trc.org/" },
+                    { title: "BioGENEius Challenge USA", desc: "National research competition focused on biotechnology, healthcare, and sustainability.", url: "https://www.biotechinstitute.org/" },
+                    { title: "National Ocean Sciences Bowl", desc: "Academic quiz bowl on marine biology, ocean chemistry, and marine ecosystems.", url: "https://nosb.org/" },
+                    { title: "Genes in Space", desc: "Design pioneering DNA analysis experiments to be performed aboard the International Space Station.", url: "https://www.genesinspace.org/" },
+                    { title: "Envirothon USA", desc: "North American environmental science competition evaluating forestry, soil, and aquatic biology.", url: "https://www.envirothon.org/" },
+                    { title: "National Brain Bee USA", desc: "Neuroscience competition for high school students testing neuroanatomy and brain disease knowledge.", url: "https://www.dental.umaryland.edu/brainbee/" },
+                    { title: "Human Genome Project Student Challenge", desc: "National computational biology challenge analyzing genetic sequences.", url: "https://www.genome.gov/" },
+                    { title: "Society for In Vitro Biology Contest", desc: "Research paper submission platform for tissue engineering and cellular biology projects.", url: "https://sivb.org/" },
+                    { title: "Cellular Agriculture USA Essay & Project Award", desc: "National competition exploring cellular biotechnology and sustainable bio-manufacturing.", url: "https://www.gfi.org/" },
+                    { title: "AHA Young Investigator Challenge", desc: "American Heart Association cardiovascular biology award for student researchers.", url: "https://www.heart.org/" }
+                ],
+                Business: [
+                    { title: "DECA High School Competitive Events", desc: "Prepares emerging leaders in marketing, finance, management, and hospitality.", url: "https://www.deca.org/" },
+                    { title: "FBLA National Leadership Conference", desc: "National business contests, finance case studies, and leadership challenges.", url: "https://www.fbla-pnl.org/" },
+                    { title: "Wharton Global High School Investment Competition", desc: "Online simulation managing a $100,000 virtual investment portfolio with real strategy papers.", url: "https://globalyouth.wharton.upenn.edu/investment-competition/" },
+                    { title: "Diamond Challenge", desc: "High school entrepreneurship competition powered by University of Delaware.", url: "https://diamondchallenge.org/" },
+                    { title: "Blue Ocean Student Entrepreneurship Competition", desc: "World's largest virtual high school entrepreneurship competition for innovative business models.", url: "https://blueoceancompetition.org/" },
+                    { title: "Conrad Challenge", desc: "Annual competition where students design viable business solutions to solve global issues.", url: "https://www.conradchallenge.org/" },
+                    { title: "National Economics Challenge", desc: "Council for Economic Education's national competition for high school micro and macroeconomics.", url: "https://www.councilforeconed.org/national-economics-challenge/" },
+                    { title: "NFTE National Youth Entrepreneurship Challenge", desc: "Young founders present business plans to celebrity judges and top venture capitalists.", url: "https://www.nfte.com/" },
+                    { title: "JA Company Program National Competition", desc: "Junior Achievement contest where students launch and run authentic enterprise startups.", url: "https://jausa.ja.org/" },
+                    { title: "SIFMA Foundation Stock Market Game", desc: "National financial literacy simulation managing equity and bond portfolios.", url: "https://www.stockmarketgame.org/" }
+                ]
+            },
+            India: {
+                Physics: [
+                    { title: "Indian Olympiad Qualifier in Physics (IOQP)", desc: "National preliminary exam organized by IAPT & HBCSE for selecting Team India.", url: "https://olympiads.hbcse.tifr.res.in/" },
+                    { title: "National Standard Examination in Physics (NSEP)", desc: "First stage examination leading to the National Graduate Physics Examination.", url: "https://www.iapt.org.in/" },
+                    { title: "DST INSPIRE Fellowship Research Track", desc: "Premier national fellowship program promoting research aptitude in basic physics.", url: "https://online-inspire.gov.in/" },
+                    { title: "National Science Concours", desc: "India-wide science competition testing conceptual clarity and scientific inquiry.", url: "https://www.nationalscienceconcours.com/" },
+                    { title: "Vidyarthi Vigyan Manthan", desc: "National talent search exam run by Vijnana Bharati and NCERT for school students.", url: "https://vvm.org.in/" },
+                    { title: "JNCASR Summer Research Fellowship", desc: "Jawaharlal Nehru Centre for Advanced Scientific Research undergraduate physics fellowship.", url: "https://www.jncasr.ac.in/academic/fellowships" },
+                    { title: "Kishore Vaigyanik Protsahan Yojana (KVPY Legacy Track)", desc: "National fellowship supporting talented research students across top IISERs and IISc.", url: "https://kvpy.iisc.ac.in/" },
+                    { title: "IISc Young Fellowship in Physical Sciences", desc: "Special research initiative for physics scholars organized by IISc Bangalore.", url: "https://iisc.ac.in/" },
+                    { title: "National Graduate Physics Examination", desc: "National level exam assessing core college physics proficiency across universities.", url: "https://www.iapt.org.in/" },
+                    { title: "Homi Bhabha Balvaidnyanik Competition", desc: "Practical science and physics experimental competition organized by MSTA.", url: "https://msta.in/" }
+                ],
+                Mathematics: [
+                    { title: "Indian Olympiad Qualifier in Mathematics (IOQM)", desc: "First-stage exam organized by MTA(I) leading to Regional & Indian National Math Olympiad.", url: "https://www.mtai.org.in/ioqm-2026/" },
+                    { title: "Indian National Mathematical Olympiad (INMO)", desc: "The highly selective national stage proof-based contest for high school mathematicians.", url: "https://olympiads.hbcse.tifr.res.in/" },
+                    { title: "Madhava Mathematics Competition", desc: "National mathematics competition for undergraduate college students across India.", url: "https://www.madhavacompetition.in/" },
+                    { title: "Ramanujan Mathematical Talent Search Exam", desc: "National level exam by Ramanujan Mathematical Society testing analytical rigor.", url: "https://www.ramanujanmathsociety.org/" },
+                    { title: "Aryabhata Ganit Challenge", desc: "CBSE national initiative testing mathematical literacy, reasoning, and practical application.", url: "https://cbseacademic.nic.in/" },
+                    { title: "NMTC National Mathematics Talent Contest", desc: "Organized by the Association of Mathematics Teachers of India (AMTI).", url: "https://www.amtionline.com/" },
+                    { title: "CMI Entrance & Scholarship Track", desc: "Chennai Mathematical Institute national examination for theoretical mathematics.", url: "https://www.cmi.ac.in/" },
+                    { title: "ISI B.Math Fellowship Qualifier", desc: "Indian Statistical Institute national math and probability track.", url: "https://www.isical.ac.in/" },
+                    { title: "National Level Mathematics Olympiad (NLMO)", desc: "All India contest assessing problem-solving speed and logic.", url: "https://www.unifiedcouncil.com/" },
+                    { title: "TIFR Graduate Mathematics Talent Search", desc: "Tata Institute of Fundamental Research higher math challenge.", url: "https://www.tifr.res.in/" }
+                ],
+                Engineering: [
+                    { title: "Smart India Hackathon (SIH)", desc: "Nationwide initiative by Ministry of Education to solve pressing digital and hardware problems.", url: "https://sih.gov.in/" },
+                    { title: "National Children's Science Congress", desc: "Nationwide platform for young innovators to showcase hands-on scientific and engineering projects.", url: "https://ncsc.co.in/" },
+                    { title: "Techfest IIT Bombay Competitions", desc: "Asia's largest science and technology festival hosting national student engineering challenges.", url: "https://techfest.org/" },
+                    { title: "IIT Madras Shaastra Junior Innovations", desc: "National engineering and hardware design challenge run by IIT Madras.", url: "https://shaastra.org/" },
+                    { title: "Tinkerpreneur Innovation Challenge", desc: "Atal Innovation Mission's national initiative for school tinkers and hardware builders.", url: "https://aim.gov.in/" },
+                    { title: "National Cyber Olympiad & Coding Track", desc: "Nationwide technology competition testing computer science and systems architecture.", url: "https://sofworld.org/nco" },
+                    { title: "E-Yantra Robotics Competition", desc: "IIT Bombay's flagship embedded systems and robotics challenge for engineering students.", url: "https://www.e-yantra.org/" },
+                    { title: "Gridtech National Student Challenge", desc: "Power grid and clean energy engineering challenge supported by the Ministry of Power.", url: "https://www.powergrid.in/" },
+                    { title: "BAJA SAE India", desc: "Design and build off-road vehicles to compete in national engineering trials.", url: "https://www.bajasaeindia.org/" },
+                    { title: "DD Robocon India", desc: "Doordarshan sponsored national robotics contest for university engineering teams.", url: "https://www.ddrobocon.in/" }
+                ],
+                Biology: [
+                    { title: "Indian Olympiad Qualifier in Biology (IOQB)", desc: "National qualifier conducted by HBCSE & IAPT to select students for the Indian National Biology Olympiad.", url: "https://olympiads.hbcse.tifr.res.in/" },
+                    { title: "DST INSPIRE Bio-Sciences Stream", desc: "National fellowship recognizing original aptitude in biological research.", url: "https://online-inspire.gov.in/" },
+                    { title: "National Biotechnology Olympiad", desc: "Promoted by EDUHEAL Foundation to encourage biotech research skills.", url: "https://www.eduhealfoundation.org/" },
+                    { title: "NCBS Young Research Fellowship", desc: "National Centre for Biological Sciences flagship exposure program for bioscientists.", url: "https://www.ncbs.res.in/" },
+                    { title: "Biotech YTP - IISER Pune", desc: "Indian Institute of Science Education and Research summer biology challenge.", url: "https://www.iiserpune.ac.in/" },
+                    { title: "CSIR Summer Research Training", desc: "Council of Scientific and Industrial Research research attachment across CSIR labs.", url: "https://www.csir.res.in/" },
+                    { title: "National Level Science Talent Search (Biology)", desc: "Unified Council national examination testing life science fundamentals.", url: "https://www.unifiedcouncil.com/" },
+                    { title: "JNCASR Life Sciences Talent Search", desc: "Undergraduate laboratory training track in biological sciences.", url: "https://www.jncasr.ac.in/" },
+                    { title: "NIBMG Genomics Research Track", desc: "National Institute of Biomedical Genomics youth initiative in DNA sequencing.", url: "https://www.nibmg.ac.in/" },
+                    { title: "Wildlife Conservation Society India Fellowship", desc: "Youth biodiversity research and field ecology award.", url: "https://india.wcs.org/" }
+                ],
+                Business: [
+                    { title: "IIM Young Entrepreneurs Programme", desc: "National business pitch and case study initiatives for school and college founders.", url: "https://www.iimb.ac.in/" },
+                    { title: "National Economics Olympiad", desc: "Organized by Shri Ram College of Commerce (SRCC), evaluating financial literacy.", url: "https://srcc.edu/" },
+                    { title: "TiE Young Entrepreneurs (TYE) India", desc: "Incubation program and venture pitching contest for high school students.", url: "https://tie.org/" },
+                    { title: "IIT Delhi Tryst Business Plan Competition", desc: "Annual venture strategy competition hosted at IIT Delhi.", url: "https://tryst-iitd.org/" },
+                    { title: "IIT Kharagpur Empowerment Challenge (Empresario)", desc: "Global and national business model competition organized by E-Cell IIT Kharagpur.", url: "https://ecell-iitkgp.org/" },
+                    { title: "Under 25 Summit Business Pitch", desc: "Large national platform for young creators, entrepreneurs, and startup builders.", url: "https://www.under25.com/" },
+                    { title: "CBSE Financial Literacy Challenge", desc: "National initiative testing economic principles, banking, and wealth management.", url: "https://cbseacademic.nic.in/" },
+                    { title: "IIM Ahmedabad Chaos Case Challenge", desc: "Premier national case study competition for undergraduate analysts.", url: "https://chaos-iima.com/" },
+                    { title: "E-Cell IIT Bombay Eureka! Junior", desc: "National entrepreneurship contest specially tailored for high school students.", url: "https://www.ecell.in/eurekajunior/" },
+                    { title: "National Financial Literacy Olympiad (NFLAT)", desc: "Conducted by NCFE to test practical money management and economics skills.", url: "https://www.ncfe.org.in/" }
+                ]
+            },
+            UK: {
+                Physics: [
+                    { title: "British Physics Olympiad (BPhO)", desc: "National physics competition managed through the University of Oxford.", url: "https://www.bpho.org.uk/" },
+                    { title: "Senior Physics Challenge", desc: "Competition testing problem-solving skills for Year 12 physics students.", url: "https://www.bpho.org.uk/" },
+                    { title: "Physics Challenge for Year 11", desc: "Pre-A-level physics contest testing reasoning and problem solving.", url: "https://www.bpho.org.uk/" },
+                    { title: "Isaac Physics National Challenge", desc: "University of Cambridge project enhancing physics problem solving.", url: "https://isaacphysics.org/" },
+                    { title: "UK Space Design Competition", desc: "Industry-simulation engineering and astrophysics contest at Imperial College.", url: "https://uksdc.org/" },
+                    { title: "Royal Observatory Greenwich Astronomy Competition", desc: "Astrophysics and observational science challenge for UK youth.", url: "https://www.rmg.co.uk/royal-observatory" },
+                    { title: "NPL Physics Research Experience", desc: "National Physical Laboratory initiative for young physics scholars.", url: "https://www.npl.co.uk/" },
+                    { title: "Institute of Physics (IOP) Youth Fellowship", desc: "National awards for physics outreach and original inquiry.", url: "https://www.iop.org/" },
+                    { title: "Ogden Trust Physics Research Track", desc: "Scholarships and project grants for promising young UK physicists.", url: "https://www.ogdentrust.com/" },
+                    { title: "CERN UK Beamline School Selection", desc: "National screening competition for sending UK high schoolers to CERN particle colliders.", url: "https://www.ukri.org/councils/stfc/" }
+                ],
+                Mathematics: [
+                    { title: "UKMT Senior Mathematical Challenge", desc: "Flagship competition organized by the UK Mathematics Trust leading to BMO.", url: "https://ukmt.org.uk/" },
+                    { title: "British Mathematical Olympiad (BMO)", desc: "The premier proof-based national math exam for secondary students in the UK.", url: "https://ukmt.org.uk/" },
+                    { title: "Mathematical Olympiad for Girls", desc: "UKMT national competition encouraging young women in advanced mathematics.", url: "https://ukmt.org.uk/" },
+                    { title: "UKMT Senior Team Maths Challenge", desc: "National team competition testing mathematical speed and collaboration.", url: "https://ukmt.org.uk/" },
+                    { title: "Ritangle Competition", desc: "National math competition for A-level students organized by MEI.", url: "https://mei.org.uk/ritangle" },
+                    { title: "Oxford University Online Maths Club Challenge", desc: "Weekly national challenge set by Oxford's Mathematical Institute.", url: "https://www.maths.ox.ac.uk/" },
+                    { title: "Parallel Maths Challenge", desc: "National program created by Simon Singh to foster advanced mathematical thinking.", url: "https://parallel.org.uk/" },
+                    { title: "Intermediate Mathematical Challenge", desc: "National level exam for students up to Year 11.", url: "https://ukmt.org.uk/" },
+                    { title: "Andrew Jobbings Senior Kangaroo", desc: "National follow-on paper for top performers in the UKMT Senior Challenge.", url: "https://ukmt.org.uk/" },
+                    { title: "Cambridge Chemistry/Math Dual Olympiad", desc: "Joint university initiative evaluating physical mathematics.", url: "https://www.cam.ac.uk/" }
+                ],
+                Engineering: [
+                    { title: "CREST Awards (Gold / Silver)", desc: "Nationally recognized student-led STEM and engineering project certification.", url: "https://www.crestawards.org/" },
+                    { title: "STEM Racing UK", desc: "Nationwide competition where students design and race miniature cars.", url: "https://www.stemracing.co.uk/" },
+                    { title: "Royal Academy of Engineering Student Prize", desc: "National innovation award for secondary school inventors.", url: "https://raeng.org.uk/" },
+                    { title: "Big Bang Competition", desc: "UK young scientists and engineers competition showcasing creative design.", url: "https://competition.thebigbang.org.uk/" },
+                    { title: "Greenpower Electric Car Challenge", desc: "Design, build, and race electric vehicles on famous UK motor circuits.", url: "https://www.greenpower.co.uk/" },
+                    { title: "FIRST LEGO League UK & Ireland", desc: "National robotics and engineering design challenge managed by the IET.", url: "https://education.theiet.org/first-lego-league-uk-and-ireland/" },
+                    { title: "CanSat UK Competition", desc: "Build a simulation satellite inside a soft-drink can and launch via rocket.", url: "https://www.stem.org.uk/esero/cansat" },
+                    { title: "IET Faraday Challenge", desc: "Engineering problem solving days hosted by the Institution of Engineering and Technology.", url: "https://faraday-secondary.theiet.org/" },
+                    { title: "VEX Robotics UK National Championship", desc: "National robotics tournament selecting teams for world finals.", url: "https://www.vexrobotics.com/" },
+                    { title: "Tidy Building Design Challenge", desc: "Civil and structural engineering challenge for secondary students.", url: "https://www.istructe.org/" }
+                ],
+                Biology: [
+                    { title: "British Biology Olympiad", desc: "Organized by the Royal Society of Biology to challenge top UK biology students.", url: "https://www.rsb.org.uk/" },
+                    { title: "Intermediate Biology Olympiad", desc: "National competition for post-16 students in their first year of higher education.", url: "https://www.rsb.org.uk/" },
+                    { title: "Biology Challenge for Years 9-10", desc: "National contest fostering interest in natural sciences beyond the school curriculum.", url: "https://www.rsb.org.uk/" },
+                    { title: "Royal Society of Biology Photography Competition", desc: "Exploring ecological themes through scientific imagery.", url: "https://www.rsb.org.uk/" },
+                    { title: "UK Brain Bee National Championship", desc: "Neuroscience competition for UK secondary school students.", url: "https://www.brainbeeuk.org/" },
+                    { title: "Linnean Society BioMedia Meltdown", desc: "National competition exploring ecological science through visual arts.", url: "https://www.linnean.org/" },
+                    { title: "Nancy Rothwell Award", desc: "National specimen drawing and biological illustration competition.", url: "https://www.rsb.org.uk/" },
+                    { title: "Wellcome Trust Youth Fellowship Track", desc: "Medical and biological research exposition for UK students.", url: "https://wellcome.org/" },
+                    { title: "Field Studies Council Bio-Research Award", desc: "Field ecology and conservation research competition.", url: "https://www.field-studies-council.org/" },
+                    { title: "Microbiology Society School Challenge", desc: "Research project on bacterial resistance and virology.", url: "https://microbiologysociety.org/" }
+                ],
+                Business: [
+                    { title: "Young Enterprise Company Programme", desc: "UK's leading national enterprise program where students run real companies.", url: "https://www.young-enterprise.org.uk/" },
+                    { title: "IFS Student Investor Challenge", desc: "National stock market investment challenge organized by the London Institute of Banking & Finance.", url: "https://www.libf.ac.uk/" },
+                    { title: "RES Young Economist of the Year", desc: "Royal Economic Society essay competition for high school economists.", url: "https://res.org.uk/" },
+                    { title: "Tycoon Enterprise Competition", desc: "Peter Jones Foundation business contest providing seed funding to school startups.", url: "https://www.peterjonesfoundation.org/" },
+                    { title: "ICAEW BASE Accounting Competition", desc: "National business and finance case study challenge by top chartered accountants.", url: "https://www.icaew.com/" },
+                    { title: "LSE Student Entrepreneurship Track", desc: "London School of Economics social enterprise challenge for youth.", url: "https://www.lse.ac.uk/" },
+                    { title: "Subwassert / Dragons Den School Challenge", desc: "National pitching competition for high school product designers.", url: "https://www.young-enterprise.org.uk/" },
+                    { title: "Institute of Directors Student Challenge", desc: "National leadership and strategic planning initiative.", url: "https://www.iod.com/" },
+                    { title: "Bank of England Target Two Point Zero", desc: "Economics case study challenge setting monetary policy recommendations.", url: "https://www.bankofengland.co.uk/" },
+                    { title: "Venture Matrix UK", desc: "Consultancy style business problem-solving for regional and national companies.", url: "https://www.young-enterprise.org.uk/" }
+                ]
+            },
+            Canada: {
+                Physics: [
+                    { title: "Canadian Physics Olympiad (CPO)", desc: "National physics competition selecting Canada's international team.", url: "https://olympiad.phas.ubc.ca/" },
+                    { title: "CAP High School Physics Exam", desc: "Exam administered by the Canadian Association of Physicists across high schools.", url: "https://www.cap.ca/" },
+                    { title: "Perimeter Institute International Summer School Track", desc: "Theoretical physics initiative hosted in Waterloo, Ontario.", url: "https://perimeterinstitute.ca/" },
+                    { title: "UBC Physics Contest", desc: "University of British Columbia regional and national physics challenge.", url: "https://www.physics.ubc.ca/" },
+                    { title: "University of Toronto Physics Competition", desc: "Annual problem-solving contest testing advanced classical mechanics.", url: "https://www.physics.utoronto.ca/" },
+                    { title: "Sir Isaac Newton Physics Contest (SIN)", desc: "Fun and challenging physics exam hosted by the University of Waterloo.", url: "https://uwaterloo.ca/physics/sin" },
+                    { title: "McMaster University Physics Challenge", desc: "Physics laboratory and theoretical challenge for high schoolers.", url: "https://www.physics.mcmaster.ca/" },
+                    { title: "Canadian Association of Physicists Prize Exam", desc: "Undergraduate level exam evaluating core physics competence.", url: "https://www.cap.ca/" },
+                    { title: "TRIUMF Physics Youth Exposure Track", desc: "Canada's national particle accelerator research center youth program.", url: "https://www.triumf.ca/" },
+                    { title: "McGill Physics Olympiad Preparation Track", desc: "Academic workshop and exam series held in Quebec.", url: "https://www.physics.mcgill.ca/" }
+                ],
+                Mathematics: [
+                    { title: "Canadian Open Mathematics Challenge (COMC)", desc: "Canada's premier national mathematics competition organized by CMS.", url: "https://cms.math.ca/competitions/comc/" },
+                    { title: "Waterloo Euclid Math Contest", desc: "Prestigious national math competition run by the University of Waterloo for Grade 12s.", url: "https://www.cemc.uwaterloo.ca/" },
+                    { title: "Waterloo Fermat & Cayley Contests", desc: "Targeted national math exams for upper secondary students.", url: "https://www.cemc.uwaterloo.ca/" },
+                    { title: "Canadian Mathematical Olympiad (CMO)", desc: "The official invitation-only national proof-based math championship.", url: "https://cms.math.ca/competitions/cmo/" },
+                    { title: "Canadian Junior Math Olympiad", desc: "Targeted national proof competition for younger secondary mathematicians.", url: "https://cms.math.ca/" },
+                    { title: "Sun Life Financial Canadian Open Math Track", desc: "Mathematics initiative supporting regional high school problem solvers.", url: "https://cms.math.ca/" },
+                    { title: "Pascal Math Competition", desc: "National Grade 9 math competition testing logical thinking.", url: "https://www.cemc.uwaterloo.ca/" },
+                    { title: "CSMC Canadian Senior Mathematics Contest", desc: "Curriculum-based and problem-solving contest by Waterloo.", url: "https://www.cemc.uwaterloo.ca/" },
+                    { title: "Math Kangaroo Canada", desc: "National contest promoting mathematical reasoning for all grade levels.", url: "https://mathkangaroo.ca/" },
+                    { title: "Maritime Mathematics Competition", desc: "Regional and national level contest held across Eastern Canadian universities.", url: "https://www.math.unb.ca/" }
+                ],
+                Engineering: [
+                    { title: "Canada-Wide Science Fair (CWSF)", desc: "National championship where top regional STEM and engineering projects compete.", url: "https://youthscience.ca/" },
+                    { title: "FIRST Robotics Canada", desc: "National robotics league bringing together high school teams across provinces.", url: "https://www.firstroboticscanada.org/" },
+                    { title: "VEX Robotics Canadian National Championship", desc: "Robotics competition testing design, building, and programming.", url: "https://www.vexrobotics.com/" },
+                    { title: "Sanofi Biogenius Canada (Engineering Track)", desc: "National bio-engineering research competition for high school students.", url: "https://biogenius.ca/" },
+                    { title: "Skills Canada Robotics & CNC Competition", desc: "National trade and technology competition testing hands-on engineering.", url: "https://www.skillscompetencescanada.com/" },
+                    { title: "Shad Canada STEM & Entrepreneurship Program", desc: "Month-long live-in program for youth focusing on design engineering.", url: "https://www.shad.ca/" },
+                    { title: "Engineering Bright Works Challenge", desc: "Canadian environmental and mechanical design challenge.", url: "https://youthscience.ca/" },
+                    { title: "DeepSpace Canada Rover Track", desc: "Aerospace and rover engineering competition hosted by Canadian space enthusiasts.", url: "https://www.asc-csa.gc.ca/" },
+                    { title: "Canadian Young Physicists/Engineers Tournament", desc: "Experimental design and engineering defense challenge.", url: "https://stemfellowship.org/" },
+                    { title: "Little Shop of Physics/Engineering Challenge", desc: "Prototyping competition for secondary students.", url: "https://youthscience.ca/" }
+                ],
+                Biology: [
+                    { title: "Canadian Biology Olympiad (CBO)", desc: "National competition evaluating top secondary biology scholars across provinces.", url: "https://www.canadianbiologyolympiad.ca/" },
+                    { title: "Sanofi Biogenius Canada", desc: "Premier biotechnology and life sciences research competition for Canadian youth.", url: "https://biogenius.ca/" },
+                    { title: "University of Toronto National Biology Competition", desc: "Tests high school students' understanding of biological concepts.", url: "https://biocomp.utoronto.ca/" },
+                    { title: "Canadian Brain Bee", desc: "National neuroscience contest held at McMaster University.", url: "https://canadianbrainbee.ca/" },
+                    { title: "STEM Fellowship Big Data Challenge (Bio Track)", desc: "Analyzing biological data sets and genomics.", url: "https://stemfellowship.org/" },
+                    { title: "Canadian Youth Environmental Leadership Award", desc: "Field biology and conservation action project grant.", url: "https://youthscience.ca/" },
+                    { title: "BC Game Development & Bioinformatics Challenge", desc: "Computational biology competition hosted in Western Canada.", url: "https://www.ubc.ca/" },
+                    { title: "Ocean Wise Youth Conservation Fellowship", desc: "Marine biology and coastal ecosystem protection initiative.", url: "https://ocean.org/" },
+                    { title: "Ontario Biology Leadership Challenge", desc: "Provincial and national laboratory skills showcase.", url: "https://www.utoronto.ca/" },
+                    { title: "Agriculture Canada Youth Research Track", desc: "Plant science and sustainable farming research award.", url: "https://agriculture.canada.ca/" }
+                ],
+                Business: [
+                    { title: "DECA Canada Provincial & National Conference", desc: "Canada's largest youth business leadership and case study organization.", url: "https://deca.ca/" },
+                    { title: "JA Canada Company Program", desc: "Student-led startup competition launching real products in Canadian markets.", url: "https://jacanada.org/" },
+                    { title: "Rotman Commerce High School Case Competition", desc: "Business strategy challenge hosted by the University of Toronto.", url: "https://rotmancommerce.utoronto.ca/" },
+                    { title: "UBC Sauder LIFT Business Challenge", desc: "Entrepreneurship and social impact competition in Vancouver.", url: "https://www.sauder.ubc.ca/" },
+                    { title: "Ivey High School Case Competition", desc: "Western University's national business case analysis event.", url: "https://www.ivey.uwo.ca/" },
+                    { title: "Canadian Economics Olympiad", desc: "National competition evaluating economic analysis, finance, and logic.", url: "https://econolympiad.ca/" },
+                    { title: "Target Alpha Financial Challenge", desc: "Stock trading and financial analysis contest for high schoolers.", url: "https://targetalpha.ca/" },
+                    { title: "Enactus Canada College Track", desc: "Social entrepreneurship competition for post-secondary innovators.", url: "https://enactus.ca/" },
+                    { title: "Future Dragon's Den Youth Pitch", desc: "Venture pitch competition modeled after the hit national TV show.", url: "https://jacanada.org/" },
+                    { title: "Queen's University High School Business Challenge", desc: "National business plan strategy contest hosted by Smith School of Business.", url: "https://smith.queensu.ca/" }
+                ]
+            },
+            Other: {
+                Physics: [
+                    { title: "National Physics Olympiad Qualifier", desc: "Official national preliminary exam organized by your country's physical society.", url: "https://ipho-official.org/" },
+                    { title: "CERN Beamline for Schools", desc: "Global competition allowing student teams to perform experiments at particle colliders.", url: "https://beamlineforschools.cern/" },
+                    { title: "International Astronomy & Astrophysics Competition", desc: "Global online contest testing theoretical physics and space science.", url: "https://iaac.space/" },
+                    { title: "International Young Physicists' Tournament Track", desc: "National selection tournament for physics research and debate.", url: "https://www.iypt.org/" },
+                    { title: "Physics Without Borders Youth Challenge", desc: "Global problem-solving contest testing physical fundamentals.", url: "https://www.ictp.it/" },
+                    { title: "UNESCO Physical Science Youth Award", desc: "Inquiry award promoting natural science research among international youth.", url: "https://www.unesco.org/" },
+                    { title: "World Federation of Physics Competitions Track", desc: "National level testing affiliated with global physical societies.", url: "http://www.wfpc.ch/" },
+                    { title: "Global Youth Science Challenge (Physics Track)", desc: "Research submission contest hosted by HKOC.", url: "https://www.cef.org.hk/" },
+                    { title: "European Physics Olympiad Open Track", desc: "Regional physics championship open to guest national teams.", url: "https://eupho.ee/" },
+                    { title: "Asian Physics Olympiad National Qualifier", desc: "National selection round for Asian and Pacific physical societies.", url: " https://apho2024.org/" }
+                ],
+                Mathematics: [
+                    { title: "National Mathematical Olympiad Qualifier", desc: "Local national qualifying round for the International Mathematical Olympiad.", url: "https://www.imo-official.org/" },
+                    { title: "Mathematical Kangaroo Global", desc: "World's largest math competition with millions of participants across 90+ countries.", url: "https://www.mathkangaroo.org/" },
+                    { title: "Asia Pacific Mathematics Olympiad", desc: "Regional contest for countries around the Pacific Rim.", url: "https://www.apmo-official.org/" },
+                    { title: "Global Mathematical Talent Search", desc: "Proof-based online mathematical competition.", url: "https://www.usamts.org/" },
+                    { title: "International Mathematical Modeling Challenge", desc: "Team-based competition applying mathematical analysis to real problems.", url: "http://www.immchallenge.org/" },
+                    { title: "European Girls' Mathematical Olympiad Track", desc: "National team selection for young women in mathematics.", url: "https://www.egmo.org/" },
+                    { title: "Totus Mathematical Challenge", desc: "Worldwide theoretical math exam for secondary students.", url: "https://www.imo-official.org/" },
+                    { title: "World Maths Day Challenge", desc: "Global online speed and mental arithmetic contest.", url: "https://www.3plearning.com/worldmathsday/" },
+                    { title: "Global Youth Math Research Track", desc: "Paper submission competition for secondary researchers.", url: "https://www.siam.org/" },
+                    { title: "International Youth Math Challenge", desc: "Independent online math competition hosted for worldwide students.", url: "https://iymc.info/" }
+                ],
+                Engineering: [
+                    { title: "National Science & Engineering Fair", desc: "Participate in your country's national science and engineering fair affiliated with ISEF.", url: "https://www.societyforscience.org/isef/" },
+                    { title: "VEX Robotics World Championship Track", desc: "Compete in local qualifying tournaments to advance to the world finals.", url: "https://www.vexrobotics.com/" },
+                    { title: "James Dyson Award Youth Track", desc: "International design competition celebrating inventive engineering solutions.", url: "https://www.jamesdysonaward.org/" },
+                    { title: "FIRST Global Challenge", desc: "Olympics-style robotics competition where nations field official national teams.", url: "https://first.global/" },
+                    { title: "World Robot Olympiad (WRO)", desc: "Global robotics tournament focusing on innovation and autonomous navigation.", url: "https://wro-association.org/" },
+                    { title: "UNESCO Youth Engineering Challenge", desc: "Project contest designing infrastructure and technological solutions.", url: "https://www.unesco.org/" },
+                    { title: "Global Innovation Challenge", desc: "Hardware and engineering solution competition for sustainable development.", url: "https://www.unep.org/" },
+                    { title: "Future City Competition Track", desc: "Engineering cities of the future using CAD design and structural planning.", url: "https://futurecity.org/" },
+                    { title: "Breakthrough Junior Challenge (Engineering)", desc: "Video competition explaining breakthrough engineering concepts.", url: "https://breakthroughjuniorchallenge.org/" },
+                    { title: "International Engineering Research Exposition", desc: "Paper presentation forum for young technological researchers.", url: "https://www.ieee.org/" }
+                ],
+                Biology: [
+                    { title: "National Biology Olympiad Qualifier", desc: "Official national competition selecting representatives for the International Biology Olympiad.", url: "https://www.ibo-info.org/" },
+                    { title: "iGEM Synthetic Biology Competition", desc: "Premier synthetic biology competition for high school and university teams.", url: "https://igem.org/" },
+                    { title: "International Brain Bee Qualifier", desc: "Worldwide neuroscience competition testing knowledge on the human brain.", url: "https://thebrainbee.org/" },
+                    { title: "Global Biodiversity Challenge", desc: "Field research and conservation biology contest sponsored by IUCN.", url: "https://www.iucn.org/" },
+                    { title: "World Bio-Tech Youth Pitch", desc: "Presenting biotechnological ideas for healthcare and agriculture.", url: "https://www.biotechinstitute.org/" },
+                    { title: "Bio-Coding Global Challenge", desc: "Bioinformatics competition solving genetic and proteomic datasets.", url: "https://www.ncbi.nlm.nih.gov/" },
+                    { title: "Ecology Without Borders Award", desc: "Environmental science competition exploring local ecosystem preservation.", url: "https://www.unep.org/" },
+                    { title: "International Youth Life Science Symposium", desc: "Academic poster session for secondary biology papers.", url: "https://www.ibo-info.org/" },
+                    { title: "Cellular Agriculture International Youth Contest", desc: "Exploring lab-grown food and sustainable bio-manufacturing.", url: "https://gfi.org/" },
+                    { title: "Global Marine Biology Research Forum", desc: "Student contest focusing on ocean sciences and coral restoration.", url: "https://www.noaa.gov/" }
+                ],
+                Business: [
+                    { title: "TiE Young Entrepreneurs Global Track", desc: "Global entrepreneurship program with international pitch finals for young founders.", url: "https://tye.tie.org/" },
+                    { title: "Global Student Entrepreneur Awards", desc: "Premier global competition for student founders running active businesses.", url: "https://gsea.org/" },
+                    { title: "Junior Achievement Worldwide Challenge", desc: "Participate in your national JA entrepreneurship challenge.", url: "https://www.jaworldwide.org/" },
+                    { title: "Wharton Global Investment Simulation", desc: "Open to secondary school teams worldwide managing virtual investment funds.", url: "https://globalyouth.wharton.upenn.edu/investment-competition/" },
+                    { title: "Blue Ocean Global Entrepreneurship Competition", desc: "Largest virtual high school business pitch contest globally.", url: "https://blueoceancompetition.org/" },
+                    { title: "International Economics Olympiad (IEO)", desc: "Global competition in economics and business finance for high schoolers.", url: "https://ecolympiad.org/" },
+                    { title: "Social Innovation Challenge Global", desc: "Pitching business solutions for UN Sustainable Development Goals.", url: "https://www.un.org/sustainabledevelopment/" },
+                    { title: "World Youth Entrepreneurship Summit", desc: "Global venture showcase for high school and college founders.", url: "https://www.nfte.com/" },
+                    { title: "International Financial Literacy Challenge", desc: "Testing asset allocation, economics, and corporate strategy.", url: "https://www.oecd.org/" },
+                    { title: "Conrad Global Innovation Pitch", desc: "Design viable commercial business models around emerging tech.", url: "https://www.conradchallenge.org/" }
+                ]
+            }
+        };
+
+        const globalDatabase = {
+            Physics: [
+                { title: "International Physics Olympiad (IPhO)", desc: "The premier global physics competition for secondary students worldwide.", url: "https://ipho-official.org/" },
+                { title: "Beamline for Schools (BL4S) - CERN", desc: "Teams submit proposals to perform real experiments at CERN/DESY particle colliders.", url: "https://beamlineforschools.cern/" },
+                { title: "International Young Physicists' Tournament", desc: "Physics World Cup where international teams investigate and defend open physics problems.", url: "https://www.iypt.org/" },
+                { title: "International Astronomy & Astrophysics Competition", desc: "Global online competition offering problem solving in astrophysics.", url: "https://iaac.space/" },
+                { title: "European Physics Olympiad (EuPhO)", desc: "Regional physics championship open to guest national teams around the globe.", url: "https://eupho.ee/" },
+                { title: "Asian Physics Olympiad (APhO)", desc: "Elite physics contest for students across Asia-Pacific nations.", url: "https://apho2024.org/" },
+                { title: "Breakthrough Junior Challenge (Physics)", desc: "Create an engaging video explaining a complex physics theory or discovery.", url: "https://breakthroughjuniorchallenge.org/" },
+                { title: "International Youth Physics Challenge", desc: "Global submission platform for original high school physics research.", url: "https://iymc.info/" },
+                { title: "Space Settlement Design Competition", desc: "Global aerospace design contest simulating industry engineering bids.", url: "https://www.spaceset.org/" },
+                { title: "World Science Festival Youth Track", desc: "International forum for presentation of secondary physical research.", url: "https://www.worldsciencefestival.com/" }
+            ],
+            Mathematics: [
+                { title: "International Mathematical Olympiad (IMO)", desc: "The oldest and most elite world championship math competition.", url: "https://www.imo-official.org/" },
+                { title: "Mathematical Contest in Modeling (MCM/ICM)", desc: "International team contest applying math models to solve real-world problems.", url: "https://www.comap.com/contests/mcm-icm" },
+                { title: "Mathematical Kangaroo Global", desc: "World's largest math competition with millions of participants across 90+ countries.", url: "https://www.mathkangaroo.org/" },
+                { title: "International Youth Math Challenge (IYMC)", desc: "Global online math contest evaluating advanced analytical skills.", url: "https://iymc.info/" },
+                { title: "European Girls' Mathematical Olympiad (EGMO)", desc: "International proof-based math competition for young women.", url: "https://www.egmo.org/" },
+                { title: "Asia Pacific Mathematics Olympiad (APMO)", desc: "Regional mathematics competition for nations bordering the Pacific Rim.", url: "https://www.apmo-official.org/" },
+                { title: "International Mathematical Modeling Challenge", desc: "International competition promoting math modeling for high schoolers.", url: "http://www.immchallenge.org/" },
+                { title: "World Maths Day Global Championship", desc: "Speed mathematics competition drawing millions of students online.", url: "https://www.3plearning.com/worldmathsday/" },
+                { title: "Harvard-MIT Math Tournament Global Track", desc: "International participation track for top worldwide math teams.", url: "https://www.hmmt.org/" },
+                { title: "International Open Mathematics Challenge", desc: "Online proof and problem-solving competition open to all secondary students.", url: "https://www.imo-official.org/" }
+            ],
+            Engineering: [
+                { title: "VEX Robotics World Championship", desc: "The largest global robotics tournament bringing together thousands of teams.", url: "https://www.vexrobotics.com/competition" },
+                { title: "International Science & Engineering Fair (ISEF)", desc: "The world's largest pre-college STEM and engineering research competition.", url: "https://www.societyforscience.org/isef/" },
+                { title: "James Dyson Award", desc: "International design and engineering award celebrating inventive design solutions.", url: "https://www.jamesdysonaward.org/" },
+                { title: "FIRST Global Challenge", desc: "Olympics-style international robotics challenge with teams representing over 190 countries.", url: "https://first.global/" },
+                { title: "World Robot Olympiad (WRO)", desc: "Global robotics competition fostering micro-engineering and software logic.", url: "https://wro-association.org/" },
+                { title: "Conrad Innovation Challenge", desc: "Global competition encouraging students to engineer viable commercial tech.", url: "https://www.conradchallenge.org/" },
+                { title: "Google Science Fair / Global Innovation Challenge", desc: "Global platform for student inventors to present engineering solutions.", url: "https://www.societyforscience.org/" },
+                { title: "RoboCupJunior International", desc: "Global robotics contest focusing on autonomous soccer, rescue, and robotics dance.", url: "https://junior.robocup.org/" },
+                { title: "CanSat Global Aerospace Challenge", desc: "Designing micro-satellites for high-altitude scientific analysis.", url: "https://www.stem.org.uk/esero/cansat" },
+                { title: "Shell Eco-marathon Student Track", desc: "Engineering ultra-energy-efficient vehicles on global raceways.", url: "https://www.makethefuture.shell/en-gb/shell-eco-marathon" }
+            ],
+            Biology: [
+                { title: "International Biology Olympiad (IBO)", desc: "World championship biology contest testing theoretical knowledge and lab skills.", url: "https://www.ibo-info.org/" },
+                { title: "iGEM (International Genetically Engineered Machine)", desc: "World's premier synthetic biology competition for high school and university teams.", url: "https://igem.org/" },
+                { title: "International Brain Bee", desc: "Worldwide neuroscience competition testing knowledge on the human brain.", url: "https://thebrainbee.org/" },
+                { title: "Breakthrough Junior Challenge (Life Sciences)", desc: "Global video competition explaining fundamental biological concepts.", url: "https://breakthroughjuniorchallenge.org/" },
+                { title: "Global Youth Science Challenge (Bio Track)", desc: "International paper submission platform for life science researchers.", url: "https://www.cef.org.hk/" },
+                { title: "World Bio-Science Congress Youth Forum", desc: "Showcasing student projects in molecular biology and genetic engineering.", url: "https://www.biotechinstitute.org/" },
+                { title: "International Ecological Research Forum", desc: "Global competition addressing biodiversity loss and environmental protection.", url: "https://www.iucn.org/" },
+                { title: "BioGENEius Global Track", desc: "International track evaluating medical and environmental biotechnology.", url: "https://www.biotechinstitute.org/" },
+                { title: "Global Bioinformatics Youth Challenge", desc: "Analyzing genomic datasets and disease prevention models.", url: "https://www.ncbi.nlm.nih.gov/" },
+                { title: "UNESCO Life Sciences Youth Fellowship", desc: "Recognizing outstanding young researchers in biological sciences.", url: "https://www.unesco.org/" }
+            ],
+            Business: [
+                { title: "TiE Young Entrepreneurs (TYE) Global", desc: "Global entrepreneurship program with international pitch finals for young founders.", url: "https://tye.tie.org/" },
+                { title: "Global Student Entrepreneur Awards (GSEA)", desc: "Premier global competition for student founders running active businesses.", url: "https://gsea.org/" },
+                { title: "International Economics Olympiad (IEO)", desc: "Worldwide competition in economics, business strategy, and financial literacy.", url: "https://ecolympiad.org/" },
+                { title: "Blue Ocean Student Entrepreneurship Competition", desc: "World's largest virtual high school entrepreneurship competition.", url: "https://blueoceancompetition.org/" },
+                { title: "Wharton Global High School Investment Competition", desc: "Global portfolio strategy competition hosted by the Wharton School.", url: "https://globalyouth.wharton.upenn.edu/investment-competition/" },
+                { title: "Diamond Challenge Global", desc: "International entrepreneurship competition for high school innovators.", url: "https://diamondchallenge.org/" },
+                { title: "Junior Achievement World Business Challenge", desc: "Global simulation competition testing global supply chain and enterprise management.", url: "https://www.jaworldwide.org/" },
+                { title: "Social Innovation Challenge Global", desc: "Pitching business plans aligned with the UN Sustainable Development Goals.", url: "https://www.un.org/sustainabledevelopment/" },
+                { title: "World Youth Entrepreneurship Challenge", desc: "Global pitch competition hosted by NFTE.", url: "https://www.nfte.com/" },
+                { title: "Harvard Undergraduate Global Business Challenge", desc: "International case study competition for aspiring analysts.", url: "https://www.harvard.edu/" }
+            ]
+        };
+
+        document.getElementById('ecForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const interest = document.getElementById('interest').value;
+            const country = document.getElementById('country').value;
+
+            const countryNationals = (nationalDatabase[country] && nationalDatabase[country][interest]) 
+                ? nationalDatabase[country][interest] 
+                : (nationalDatabase['Other'][interest] || []);
+
+            const globalList = globalDatabase[interest] || [];
+
+            const nationalContainer = document.getElementById('nationalCards');
+            const globalContainer = document.getElementById('globalCards');
+
+            nationalContainer.innerHTML = '';
+            globalContainer.innerHTML = '';
+
+            countryNationals.forEach((item) => {
+                nationalContainer.innerHTML += `
+                    <div class="ec-card">
+                        <div>
+                            <span class="tag">National (${country})</span>
+                            <h3>${item.title}</h3>
+                            <p>${item.desc}</p>
+                        </div>
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="apply-btn">View Official Site</a>
+                    </div>
+                `;
+            });
+
+            globalList.forEach((item) => {
+                globalContainer.innerHTML += `
+                    <div class="ec-card">
+                        <div>
+                            <span class="tag" style="background-color: #FFF9E6; color: #D68A00;">Global Pathway</span>
+                            <h3>${item.title}</h3>
+                            <p>${item.desc}</p>
+                        </div>
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="apply-btn">View Official Site</a>
+                    </div>
+                `;
+            });
+
+            document.getElementById('nationalBadge').innerText = `${countryNationals.length} Found`;
+            document.getElementById('globalBadge').innerText = `${globalList.length} Found`;
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
